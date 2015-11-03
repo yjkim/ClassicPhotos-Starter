@@ -33,7 +33,7 @@ class ListViewController: UITableViewController {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("CellIdentifier", forIndexPath: indexPath) as! UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("CellIdentifier", forIndexPath: indexPath) 
     let rowKey = photos.allKeys[indexPath.row] as! String
     
     var image : UIImage?
@@ -56,13 +56,13 @@ class ListViewController: UITableViewController {
   
   
   func applySepiaFilter(image:UIImage) -> UIImage? {
-    let inputImage = CIImage(data:UIImagePNGRepresentation(image))
+    let inputImage = CIImage(data:UIImagePNGRepresentation(image)!)
     let context = CIContext(options:nil)
     let filter = CIFilter(name:"CISepiaTone")
-    filter.setValue(inputImage, forKey: kCIInputImageKey)
-    filter.setValue(0.8, forKey: "inputIntensity")
-    if let outputImage = filter.outputImage {
-      let outImage = context.createCGImage(outputImage, fromRect: outputImage.extent())
+    filter?.setValue(inputImage, forKey: kCIInputImageKey)
+    filter?.setValue(0.8, forKey: "inputIntensity")
+    if let outputImage = filter?.outputImage {
+      let outImage = context.createCGImage(outputImage, fromRect: outputImage.extent)
       return UIImage(CGImage: outImage)
     }
     return nil

@@ -157,6 +157,8 @@
 		27DF645519657A9300B42725 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0710;
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = raywenderlich;
 				TargetAttributes = {
@@ -393,6 +395,7 @@
 				27DF647619657A9300B42725 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		27DF647719657A9300B42725 /* Build configuration list for PBXNativeTarget "ClassicPhotosTests" */ = {
 			isa = XCConfigurationList;
@@ -401,6 +404,7 @@
 				27DF647919657A9300B42725 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
