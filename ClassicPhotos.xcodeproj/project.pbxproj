@@ -13,6 +13,8 @@
 		27DF647B19657AD900B42725 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27DF647A19657AD900B42725 /* Storyboard.storyboard */; };
 		27DF647D19657B7500B42725 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DF647C19657B7500B42725 /* ListViewController.swift */; };
 		27DF647F19657EDE00B42725 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DF647E19657EDE00B42725 /* CoreImage.framework */; };
+		94D1FEC11BE8E63300F1977A /* PhotoOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1FEC01BE8E63300F1977A /* PhotoOperations.swift */; };
+		94D1FEC21BE8E63300F1977A /* PhotoOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1FEC01BE8E63300F1977A /* PhotoOperations.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,7 @@
 		27DF647A19657AD900B42725 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		27DF647C19657B7500B42725 /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		27DF647E19657EDE00B42725 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		94D1FEC01BE8E63300F1977A /* PhotoOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoOperations.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +87,7 @@
 				27DF646019657A9300B42725 /* Supporting Files */,
 				27DF647A19657AD900B42725 /* Storyboard.storyboard */,
 				27DF647C19657B7500B42725 /* ListViewController.swift */,
+				94D1FEC01BE8E63300F1977A /* PhotoOperations.swift */,
 			);
 			path = ClassicPhotos;
 			sourceTree = "<group>";
@@ -215,6 +219,7 @@
 			files = (
 				27DF647D19657B7500B42725 /* ListViewController.swift in Sources */,
 				27DF646319657A9300B42725 /* AppDelegate.swift in Sources */,
+				94D1FEC11BE8E63300F1977A /* PhotoOperations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94D1FEC21BE8E63300F1977A /* PhotoOperations.swift in Sources */,
 				27DF647119657A9300B42725 /* ClassicPhotosTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
