@@ -67,28 +67,34 @@ class ListViewController: UITableViewController {
         return cell
     }
     
-    
     func fetchPhotoDetails() {
         let request = NSURLRequest(URL:dataSourceURL!)
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue()) {response,data,error in
-            if data != nil {
-                let datasourceDictionary = NSPropertyListSerialization.propertyListWithData(data, options: Int(NSPropertyListMutabilityOptions.Immutable.rawValue), format: nil, error: nil) as! NSDictionary
+            if let data = data {
                 
-                for(key : AnyObject,value : AnyObject) in datasourceDictionary {
-                    let name = key as? String
-                    let url = NSURL(string:value as? String ?? "")
-                    if name != nil && url != nil {
-                        let photoRecord = PhotoRecord(name:name!, url:url!)
-                        self.photos.append(photoRecord)
+                do {
+                    if let datasourceDictionary = try NSPropertyListSerialization.propertyListWithData(data, options: NSPropertyListReadOptions.Immutable, format: nil) as? NSDictionary {
+                        
+                        for(key,value) in datasourceDictionary {
+                            let name = key as? String
+                            let url = NSURL(string:value as? String ?? "")
+                            if name != nil && url != nil {
+                                let photoRecord = PhotoRecord(name:name!, url:url!)
+                                self.photos.append(photoRecord)
+                            }
+                        }
                     }
+                    
+                    self.tableView.reloadData()
+                    
+                } catch _ {
+                    
                 }
-                
-                self.tableView.reloadData()
             }
             
-            if error != nil {
+            if let error = error {
                 let alert = UIAlertView(title:"Oops!",message:error.localizedDescription, delegate:nil, cancelButtonTitle:"OK")
                 alert.show()
             }
@@ -105,5 +111,48 @@ class ListViewController: UITableViewController {
         default:
             NSLog("do nothing")
         }
+    }
+    
+    func startDownloadForRecord(photoDetails: PhotoRecord, indexPath: NSIndexPath){
+        //1
+        if let _ = pendingOperations.downloadsInProgress[indexPath] {
+            return
+        }
+        
+        //2
+        let downloader = ImageDownloader(photoRecord: photoDetails)
+        //3
+        downloader.completionBlock = {
+            if downloader.cancelled {
+                return
+            }
+            dispatch_async(dispatch_get_main_queue(), {
+                self.pendingOperations.downloadsInProgress.removeValueForKey(indexPath)
+                self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            })
+        }
+        //4
+        pendingOperations.downloadsInProgress[indexPath] = downloader
+        //5
+        pendingOperations.downloadQueue.addOperation(downloader)
+    }
+    
+    func startFiltrationForRecord(photoDetails: PhotoRecord, indexPath: NSIndexPath){
+        if let _ = pendingOperations.filtrationsInProgress[indexPath]{
+            return
+        }
+        
+        let filterer = ImageFiltration(photoRecord: photoDetails)
+        filterer.completionBlock = {
+            if filterer.cancelled {
+                return
+            }
+            dispatch_async(dispatch_get_main_queue(), {
+                self.pendingOperations.filtrationsInProgress.removeValueForKey(indexPath)
+                self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            })
+        }
+        pendingOperations.filtrationsInProgress[indexPath] = filterer
+        pendingOperations.filtrationQueue.addOperation(filterer)
     }
 }
