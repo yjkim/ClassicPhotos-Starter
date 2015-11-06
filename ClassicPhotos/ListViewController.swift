@@ -61,11 +61,71 @@ class ListViewController: UITableViewController {
             cell.textLabel?.text = "Failed to load"
         case .New, .Downloaded:
             indicator.startAnimating()
-            self.startOperationsForPhotoRecord(photoDetails,indexPath:indexPath)
+            if (!tableView.dragging && !tableView.decelerating) {
+                self.startOperationsForPhotoRecord(photoDetails,indexPath:indexPath)
+            }
         }
         
         return cell
     }
+    
+    override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        suspendAllOperations()
+    }
+    
+    override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            loadImagesForOnscreenCells()
+            resumeAllOperations()
+        }
+    }
+    
+    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        loadImagesForOnscreenCells()
+        resumeAllOperations()
+    }
+    
+    func suspendAllOperations () {
+        pendingOperations.downloadQueue.suspended = true
+        pendingOperations.filtrationQueue.suspended = true
+    }
+    
+    func resumeAllOperations () {
+        pendingOperations.downloadQueue.suspended = false
+        pendingOperations.filtrationQueue.suspended = false
+    }
+    
+    func loadImagesForOnscreenCells() {
+        if let pathsArray = tableView.indexPathsForVisibleRows {
+            var allPendingOperations = Set(pendingOperations.downloadsInProgress.keys)
+            allPendingOperations.unionInPlace(pendingOperations.filtrationsInProgress.keys)
+            
+            let visiblePaths = Set(pathsArray)
+            var toBeCancelled = allPendingOperations
+            toBeCancelled.subtractInPlace(visiblePaths)
+            
+            var toBeStarted = visiblePaths
+            toBeStarted.subtractInPlace(allPendingOperations)
+            
+            for indexPath in toBeCancelled {
+                if let pendingDownload = pendingOperations.downloadsInProgress[indexPath] {
+                    pendingDownload.cancel()
+                }
+                pendingOperations.downloadsInProgress.removeValueForKey(indexPath)
+                if let pendingFiltration = pendingOperations.filtrationsInProgress[indexPath] {
+                    pendingFiltration.cancel()
+                }
+                pendingOperations.filtrationsInProgress.removeValueForKey(indexPath)
+            }
+            
+            for indexPath in toBeCancelled {
+                let indexPath = indexPath as NSIndexPath
+                let recordToProcess = self.photos[indexPath.row]
+                startOperationsForPhotoRecord(recordToProcess, indexPath: indexPath)
+            }
+        }
+    }
+ 
     
     func fetchPhotoDetails() {
         let request = NSURLRequest(URL:dataSourceURL!)
@@ -156,3 +216,5 @@ class ListViewController: UITableViewController {
         pendingOperations.filtrationQueue.addOperation(filterer)
     }
 }
+
+
